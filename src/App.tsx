@@ -53,7 +53,7 @@ export default function App() {
     );
   }
 
-  const { PICKS = [], SECTORS = [], CURRENCY = [], GLOBAL_MARKETS = [], SPECULATIONS = [] } = data;
+  const { PICKS = [], SECTORS = [], CURRENCY = [], GLOBAL_MARKETS = [], SPECULATIONS = [], LIVE_NEWS = [] } = data;
   const filteredPicks = PICKS.filter((pick: any) => pick.passingTimeframes && pick.passingTimeframes.includes(timeframe));
 
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -157,6 +157,39 @@ export default function App() {
             </div>
           ))}
         </div>
+
+        {/* Live News & Impact */}
+        {LIVE_NEWS && LIVE_NEWS.length > 0 && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-6">
+            <h2 className="text-white font-semibold text-lg mb-4 m-0 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+              Live News &amp; Impact
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {LIVE_NEWS.map((newsItem: any, i: number) => (
+                <div key={i} className="bg-zinc-950 border border-zinc-800/60 rounded-xl p-4 hover:border-zinc-700/80 transition-colors flex flex-col">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-indigo-300 font-bold text-sm m-0 leading-tight pr-2">{newsItem.headline}</h3>
+                    <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full shrink-0 ${newsItem.sentiment === 'Bullish' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : newsItem.sentiment === 'Bearish' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}`}>
+                      {newsItem.sentiment}
+                    </span>
+                  </div>
+                  <p className="text-zinc-400 text-xs leading-5 m-0 mb-3">
+                    {newsItem.summary}
+                  </p>
+                  <div className="flex flex-wrap gap-1 mt-auto pt-2 border-t border-zinc-800/50">
+                    <span className="text-[10px] text-zinc-500 font-semibold mr-1 flex items-center">STOCKS:</span>
+                    {(Array.isArray(newsItem.impactedStocks) ? newsItem.impactedStocks : String(newsItem.impactedStocks).split(',')).map((stock: string, j: number) => (
+                      <span key={j} className="text-[10px] font-bold bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded">
+                        {stock.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Global Speculations Table */}
         <div className="mb-6">
