@@ -53,7 +53,7 @@ export default function App() {
     );
   }
 
-  const { PICKS = [], SECTORS = [], CURRENCY = [], GLOBAL_MARKETS = [], SPECULATIONS = [], LIVE_NEWS = [] } = data;
+  const { PICKS = [], SECTORS = [], GLOBAL_MARKETS = [], SPECULATIONS = [], LIVE_NEWS = [] } = data;
   const filteredPicks = PICKS.filter((pick: any) => pick.passingTimeframes && pick.passingTimeframes.includes(timeframe));
 
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -97,23 +97,6 @@ export default function App() {
             <span className="text-white font-medium">Daily Catalyst: </span>
             Markets tracking potential US-India tariff impact and ongoing Middle East resolutions after significant early-week volatility.
           </p>
-        </div>
-
-        {/* Global Currency Predictor */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-4">
-          <h2 className="text-white font-semibold text-lg mb-3 m-0">Global Currency Predictor</h2>
-          {CURRENCY.map((c: any, i: number) => (
-            <div key={i} className={`flex flex-row justify-between items-center ${i !== CURRENCY.length - 1 ? 'mb-3 pb-3 border-b border-zinc-800/50' : ''}`}>
-              <div>
-                <div className="text-white font-bold">{c.pair}</div>
-                <div className="text-zinc-500 text-xs">{c.signal}</div>
-              </div>
-              <div className="text-right">
-                <div className="text-white font-medium">{c.value}</div>
-                <div className={c.change.startsWith('+') ? 'text-rose-400 text-xs' : 'text-emerald-400 text-xs'}>{c.change}</div>
-              </div>
-            </div>
-          ))}
         </div>
 
         {/* Global Markets Predictor */}

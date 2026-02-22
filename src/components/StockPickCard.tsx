@@ -62,6 +62,19 @@ export default function StockPickCard({ pick, activeTimeframe = 'Daily' }: { pic
                         <div className="text-zinc-200">{pick.strategy}</div>
                     </div>
 
+                    {pick.backtestData && (
+                        <div className="mb-4 bg-zinc-800/40 border border-zinc-800/60 p-3 rounded-xl flex justify-between items-center">
+                           <div>
+                               <div className="text-zinc-500 text-[10px] font-bold tracking-widest mb-1">TRADES EXECUTED</div>
+                               <div className="text-indigo-300 font-bold text-lg">{pick.backtestData.totalTradesExecuted}</div>
+                           </div>
+                           <div className="text-right">
+                               <div className="text-zinc-500 text-[10px] font-bold tracking-widest mb-1">SUCCESS RATE</div>
+                               <div className="text-emerald-400 font-bold text-lg">{pick.backtestData.successPercentage}</div>
+                           </div>
+                        </div>
+                    )}
+
                     {/* Dual Timeframe Technicals */}
                     {pick.timeframes && (
                         <div className="mb-4">
