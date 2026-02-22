@@ -18,7 +18,7 @@ export default function App() {
     try {
       setLoading(true);
       setError(null);
-      const apiUrl = 'https://trading-pre-market-analysis.onrender.com/api/dashboard-data';
+      const apiUrl = 'https://trading-backend-api-b523.onrender.com/api/dashboard-data';
 
       const response = await fetch(apiUrl);
       if (!response.ok) throw new Error('API Request Failed');
