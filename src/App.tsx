@@ -53,7 +53,7 @@ export default function App() {
     );
   }
 
-  const { PICKS = [], SECTORS = [], GLOBAL_MARKETS = [], SPECULATIONS = [], LIVE_NEWS = [] } = data;
+  const { PICKS = [], SECTORS = [], GLOBAL_MARKETS = [], SPECULATIONS = [], LIVE_NEWS = [], CORE_MACRO = {}, PRE_MARKET = {}, INSTITUTIONAL_FLOW = {} } = data;
   const filteredPicks = PICKS.filter((pick: any) => pick.passingTimeframes && pick.passingTimeframes.includes(timeframe));
 
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -81,23 +81,25 @@ export default function App() {
         </div>
 
         {/* Core Macro Widget */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-4">
-          <h2 className="text-white font-semibold text-lg mb-3 m-0">Core Macro & News</h2>
-          <div className="mb-4 pb-4 border-b border-zinc-800/50">
-            <div className="flex flex-row justify-between mb-1">
-              <span className="text-zinc-400 font-medium">India VIX</span>
-              <span className="text-rose-400 font-bold">14.36 (+6.70%)</span>
+        {Object.keys(CORE_MACRO).length > 0 && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-4">
+            <h2 className="text-white font-semibold text-lg mb-3 m-0">Core Macro & News</h2>
+            <div className="mb-4 pb-4 border-b border-zinc-800/50">
+              <div className="flex flex-row justify-between mb-1">
+                <span className="text-zinc-400 font-medium">India VIX</span>
+                <span className={CORE_MACRO?.vixChange?.startsWith("-") ? "text-emerald-400 font-bold" : "text-rose-400 font-bold"}>{CORE_MACRO?.vixValue || "Loading..."}</span>
+              </div>
+              <p className="text-zinc-500 text-xs leading-5 m-0">
+                <span className="text-zinc-300 font-bold">VIX Context: </span>
+                {CORE_MACRO?.vixContext || "Loading global drivers..."}
+              </p>
             </div>
-            <p className="text-zinc-500 text-xs leading-5 m-0">
-              <span className="text-zinc-300 font-bold">VIX Context: </span>
-              A spike near 15 suggests traders are paying higher premiums for Put options (insurance) ahead of weekend geopolitical news. Expect gap-up/down morning openings. Strict Stop-Losses required.
+            <p className="text-zinc-400 text-sm leading-6 m-0">
+              <span className="text-white font-medium">Daily Catalyst: </span>
+              {CORE_MACRO?.dailyCatalyst || "Scanning breaking news..."}
             </p>
           </div>
-          <p className="text-zinc-400 text-sm leading-6 m-0">
-            <span className="text-white font-medium">Daily Catalyst: </span>
-            Markets tracking potential US-India tariff impact and ongoing Middle East resolutions after significant early-week volatility.
-          </p>
-        </div>
+        )}
 
         {/* Global Markets Predictor */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-4">
@@ -114,15 +116,17 @@ export default function App() {
               </div>
             </div>
           ))}
-          <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex flex-row items-center">
-            <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex flex-col items-center justify-center mr-3 shrink-0">
-              <span className="text-emerald-400 text-lg leading-none">↗</span>
+          {Object.keys(PRE_MARKET).length > 0 && (
+            <div className={`mt-4 p-3 rounded-xl flex flex-row items-center border ${PRE_MARKET?.prediction === "GAP DOWN" ? "bg-rose-500/10 border-rose-500/30" : PRE_MARKET?.prediction === "FLAT" ? "bg-amber-500/10 border-amber-500/30" : "bg-emerald-500/10 border-emerald-500/30"}`}>
+              <div className={`w-10 h-10 rounded-full flex flex-col items-center justify-center mr-3 shrink-0 ${PRE_MARKET?.prediction === "GAP DOWN" ? "bg-rose-500/20" : PRE_MARKET?.prediction === "FLAT" ? "bg-amber-500/20" : "bg-emerald-500/20"}`}>
+                <span className={`text-lg leading-none ${PRE_MARKET?.prediction === "GAP DOWN" ? "text-rose-400" : PRE_MARKET?.prediction === "FLAT" ? "text-amber-400" : "text-emerald-400"}`}>{PRE_MARKET?.directionIcon || "→"}</span>
+              </div>
+              <div className="flex-1">
+                <div className={`font-bold text-sm mb-0.5 ${PRE_MARKET?.prediction === "GAP DOWN" ? "text-rose-400" : PRE_MARKET?.prediction === "FLAT" ? "text-amber-400" : "text-emerald-400"}`}>PRE-MARKET PREDICTION: {PRE_MARKET?.prediction || "PENDING"}</div>
+                <div className={`text-xs leading-tight ${PRE_MARKET?.prediction === "GAP DOWN" ? "text-rose-400/80" : PRE_MARKET?.prediction === "FLAT" ? "text-amber-400/80" : "text-emerald-400/80"}`}>{PRE_MARKET?.reason || "Awaiting global cues..."}</div>
+              </div>
             </div>
-            <div className="flex-1">
-              <div className="text-emerald-400 font-bold text-sm mb-0.5">PRE-MARKET PREDICTION: GAP UP</div>
-              <div className="text-emerald-400/80 text-xs leading-tight">Tech/ADR strength outweighs China weakness. Expect Nifty open +50/70 pts. Buy dips near VWAP.</div>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Sector Thematic Trends */}
@@ -213,23 +217,25 @@ export default function App() {
         </div>
 
         {/* Institutional Flow */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-6">
-          <h2 className="text-white font-semibold text-lg mb-2 m-0">Institutional Flow (Cash)</h2>
-          <div className="flex flex-row justify-between items-center mb-3">
-            <span className="text-zinc-400">FII Net</span>
-            <div className="flex-1 ml-4 mr-2 h-2 bg-zinc-800 rounded-full overflow-hidden flex flex-row justify-end">
-              <div className="w-1/3 bg-rose-500 h-full rounded-full" />
+        {Object.keys(INSTITUTIONAL_FLOW).length > 0 && (
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 mb-6">
+            <h2 className="text-white font-semibold text-lg mb-2 m-0">Institutional Flow (Cash)</h2>
+            <div className="flex flex-row justify-between items-center mb-3">
+              <span className="text-zinc-400">FII Net</span>
+              <div className={`flex-1 mx-4 h-2 bg-zinc-800 rounded-full overflow-hidden flex flex-row ${INSTITUTIONAL_FLOW?.fiiNet?.startsWith("-") ? "justify-end" : "justify-start"}`}>
+                <div className={`w-1/3 h-full rounded-full ${INSTITUTIONAL_FLOW?.fiiNet?.startsWith("-") ? "bg-rose-500" : "bg-emerald-500"}`} />
+              </div>
+              <span className={`font-bold ${INSTITUTIONAL_FLOW?.fiiNet?.startsWith("-") ? "text-rose-400" : "text-emerald-400"}`}>{INSTITUTIONAL_FLOW?.fiiNet || "N/A"}</span>
             </div>
-            <span className="text-rose-400 font-bold">-₹934 Cr</span>
-          </div>
-          <div className="flex flex-row justify-between items-center">
-            <span className="text-zinc-400">DII Net</span>
-            <div className="flex-1 mx-4 h-2 bg-zinc-800 rounded-full overflow-hidden">
-              <div className="w-3/4 bg-emerald-500 h-full rounded-full" />
+            <div className="flex flex-row justify-between items-center">
+              <span className="text-zinc-400">DII Net</span>
+              <div className={`flex-1 mx-4 h-2 bg-zinc-800 rounded-full overflow-hidden flex flex-row ${INSTITUTIONAL_FLOW?.diiNet?.startsWith("-") ? "justify-end" : "justify-start"}`}>
+                <div className={`w-1/3 h-full rounded-full ${INSTITUTIONAL_FLOW?.diiNet?.startsWith("-") ? "bg-rose-500" : "bg-emerald-500"}`} />
+              </div>
+              <span className={`font-bold ${INSTITUTIONAL_FLOW?.diiNet?.startsWith("-") ? "text-rose-400" : "text-emerald-400"}`}>{INSTITUTIONAL_FLOW?.diiNet || "N/A"}</span>
             </div>
-            <span className="text-emerald-400 font-bold">+₹2,637 Cr</span>
           </div>
-        </div>
+        )}
 
         {/* Actionable Picks Header */}
         <div className="mb-4">
