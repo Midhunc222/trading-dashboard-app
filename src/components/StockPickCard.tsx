@@ -66,7 +66,14 @@ export default function StockPickCard({ pick, activeTimeframe = 'Daily' }: { pic
                         <div className="mb-4 bg-zinc-800/40 border border-zinc-800/60 p-3 rounded-xl flex justify-between items-center">
                            <div>
                                <div className="text-zinc-500 text-[10px] font-bold tracking-widest mb-1">TRADES EXECUTED</div>
-                               <div className="text-indigo-300 font-bold text-lg">{pick.backtestData.totalTradesExecuted}</div>
+                               <div className="flex items-baseline gap-2">
+                                  <span className="text-indigo-300 font-bold text-lg">{pick.backtestData.totalTradesExecuted}</span>
+                                  {pick.backtestData.duration && (
+                                     <span className="text-zinc-500 text-[10px] font-medium bg-zinc-800/50 px-2 py-0.5 rounded-full">
+                                        in {pick.backtestData.duration}
+                                     </span>
+                                  )}
+                               </div>
                            </div>
                            <div className="text-right">
                                <div className="text-zinc-500 text-[10px] font-bold tracking-widest mb-1">SUCCESS RATE</div>
