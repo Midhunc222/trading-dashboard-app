@@ -57,9 +57,16 @@ export default function StockPickCard({ pick, activeTimeframe = 'Daily' }: { pic
             {/* Expandable Details */}
             {expanded && (
                 <div className="px-4 pb-4 pt-2 border-t border-zinc-800/50 bg-zinc-900/50 block">
-                    <div className="mb-3">
-                        <div className="text-zinc-400 text-xs mb-1 font-semibold tracking-wider">STRATEGY FLAG</div>
-                        <div className="text-zinc-200">{pick.strategy}</div>
+                    <div className="mb-3 flex justify-between items-start">
+                        <div>
+                            <div className="text-zinc-400 text-xs mb-1 font-semibold tracking-wider">STRATEGY FLAG</div>
+                            <div className="text-zinc-200">{pick.strategy}</div>
+                        </div>
+                        {pick.goldenCrossover && (
+                            <div className="px-2 py-1 bg-amber-500/10 border border-amber-500/30 rounded flex items-center mt-1">
+                                <span className="text-amber-400 text-[10px] font-bold tracking-wider">🌟 GOLDEN CROSSOVER</span>
+                            </div>
+                        )}
                     </div>
 
                     {pick.backtestData && (
